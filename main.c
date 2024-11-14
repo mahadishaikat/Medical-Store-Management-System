@@ -43,7 +43,24 @@ void saveData() {}
 void loadData() {}
 
 //Mahadi's Part
-void registerUser() {}
+void registerUser() {
+    if (userCount == max_users) {
+        printf("User limit reached.\n");
+        return;
+    }
+    struct User newUser;
+    getchar();
+    printf("Enter Username: ");
+    gets(newUser.username);
+    printf("Enter Password: ");
+    gets(newUser.password);
+    printf("Are you an admin? (1 for yes, 0 for no): ");
+    scanf("%d", &newUser.isAdmin);
+    users[userCount++] = newUser;
+    printf("User registered successfully.\n");
+    choice();
+}
+
 int loginUser() {}
 void adminMenu() {}
 void userMenu() {}
