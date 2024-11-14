@@ -39,3 +39,36 @@
 3. Run the application:
    ```bash
    ./medical_store
+
+## 🚀 Usage
+
+- **Admin** can:
+  - Add, update, delete, search medicines.
+  - Save and load inventory data.
+
+- **Regular Users** can:
+  - Search and view medicines.
+  - Add medicines to the cart and checkout.
+
+## 🔑 Key Code Highlights
+
+- **Inventory Limit**: Maximum of 100 medicines.
+- **User Limit**: Up to 10 users can register.
+- **File Operations**: Data is stored in `medicine_data.txt` file for loading and saving inventory data.
+
+## 🤖 Example Operations
+
+### Admin Menu
+- Add new medicine: `AddMedicine()`
+- Display all medicines: `DisplayMedicines()`
+- Update medicine info: `UpdateMedicine()`
+- Save/load inventory: `SaveData()` / `LoadData()`
+
+### User Menu
+- Login/register: `LoginUser()` / `RegisterUser()`
+- Add to cart: `AddToCart()`
+- Checkout: `CheckoutCart()`
+
+## 📜 License
+```bash
+This project is for educational purposes and is licensed under the MIT License.
