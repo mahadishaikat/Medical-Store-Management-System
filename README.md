@@ -29,5 +29,13 @@
 
 1. Clone the repository:
    ```bash
-   git clone <repository-url>
+   git clone https://github.com/mahadishaikat/Medical-Store-Management-System
    cd MedicalStoreManagementSystem
+
+2. Compile the code:
+   ```bash
+   gcc medical_store.c -o medical_store
+
+3. Run the application:
+   ```bash
+   ./medical_store
