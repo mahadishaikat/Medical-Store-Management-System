@@ -49,6 +49,35 @@ void adminMenu() {}
 void userMenu() {}
 
 int main() {
+    int option;
+    while (1) {
+        printf("\n=== Medical Store Management System ===\n");
+        printf("1. Register\n");
+        printf("2. Login\n");
+        printf("0. Exit\n");
+        printf("Choose an option: ");
+        scanf("%d", &option);
 
+        switch (option) {
+            case 1:
+                registerUser();
+                break;
+            case 2:
+                {
+                    int isAdmin = loginUser();
+                    if (isAdmin == 1) {
+                        adminMenu();
+                    } else if (isAdmin == 0) {
+                        userMenu();
+                    }
+                }
+                break;
+            case 0:
+                printf("Thank you for using the system.\n");
+                exit(0);
+            default:
+                printf("Invalid choice. Please try again.\n");
+        }
+    }
     return 0;
 }
