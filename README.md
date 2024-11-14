@@ -73,7 +73,6 @@
 - Checkout: `CheckoutCart()`
 
 ## 📜 License
+  Read [Full Documentation](./LICENSE) From Here.
   ```bash
   This project is for educational purposes and is licensed under the MIT License.
-
-[Read Full Documentation](./LICENSE)
