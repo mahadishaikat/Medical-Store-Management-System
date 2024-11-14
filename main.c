@@ -26,6 +26,28 @@ int medicineCount = 0;
 int userCount = 0;
 int loggedInUserIndex = -1;
 
+void choice() {}
+//Habiba's Part
+void addMedicine() {}
+void displayMedicines() {}
+
+//Samsunnahar's Part
+void searchMedicine() {}
+void updateMedicine() {}
+void deleteMedicine() {}
+
+//Azaz's Part
+void addToCart() {}
+void checkoutCart() {}
+void saveData() {}
+void loadData() {}
+
+//Mahadi's Part
+void registerUser() {}
+int loginUser() {}
+void adminMenu() {}
+void userMenu() {}
+
 int main() {
 
     return 0;
