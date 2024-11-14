@@ -26,7 +26,7 @@
   - Save and load the medicine inventory to/from a text file (`medicine_data.txt`) for persistence.
 
 ## 📈 Use Case Diagram
-<img src="https://raw.githubusercontent.com/mahadishaikat/Medical-Store-Management-System/refs/heads/main/Use%20Case%20Diagram.jpg" width="600" />
+![Use Case Diagram](https://raw.githubusercontent.com/mahadishaikat/Medical-Store-Management-System/refs/heads/main/images/Use%20Case%20Diagram%20(Medical%20Store).jpg)
 
 ## ⚙️ Setup
 
