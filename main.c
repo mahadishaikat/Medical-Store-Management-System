@@ -61,7 +61,24 @@ void registerUser() {
     choice();
 }
 
-int loginUser() {}
+int loginUser() {
+    char username[50], password[50];
+    getchar();
+    printf("Enter Username: ");
+    gets(username);
+    printf("Enter Password: ");
+    gets(password);
+    for (int i = 0; i < userCount; i++) {
+        if (strcmp(users[i].username, username) == 0 && strcmp(users[i].password, password) == 0) {
+            loggedInUserIndex = i;
+            printf("Login successful! Welcome %s.\n", username);
+            return users[i].isAdmin; // Return 1 for admin, 0 for regular user
+        }
+    }
+    printf("Invalid username or password.\n");
+    return -1; // Login failed
+}
+
 void adminMenu() {}
 void userMenu() {}
 
