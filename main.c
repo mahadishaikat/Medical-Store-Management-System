@@ -20,6 +20,12 @@ struct User {
     int isAdmin;
 };
 
+struct Medicine inventory[max_medicines];
+struct User users[max_users];
+int medicineCount = 0;
+int userCount = 0;
+int loggedInUserIndex = -1;
+
 int main() {
 
     return 0;
