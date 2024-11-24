@@ -2,49 +2,180 @@
 #include <stdlib.h>
 #include <string.h>
 
-#define max_medicines 100
-#define max_users 10
-#define location_length 10
+#define MAX_MEDICINES 100
+#define MAX_USERS 10
+#define LOCATION_LENGTH 10
 
 struct Medicine {
     char name[50];
     float price;
     int quantity;
     int shelfNumber;
-    char location[location_length];
+    char location[LOCATION_LENGTH]; // "top", "middle", or "bottom"
 };
 
 struct User {
     char username[50];
     char password[50];
-    int isAdmin;
+    int isAdmin; // 1 for admin, 0 for regular user
 };
 
-struct Medicine inventory[max_medicines];
-struct User users[max_users];
+struct Medicine inventory[MAX_MEDICINES];
+struct User users[MAX_USERS];
 int medicineCount = 0;
 int userCount = 0;
 int loggedInUserIndex = -1;
 
-void choice() {}
-//Habiba's Part
-void addMedicine() {}
-void displayMedicines() {}
+void choice() {
+    printf("Press y to return to menu or n to exit: ");
+    char c;
+    scanf(" %c", &c);
+    if (c == 'y') {
+        system("cls");
+    } else if (c == 'n') {
+        printf("Thank you for using the system.\n");
+        exit(0);
+    }
+}
 
-//Samsunnahar's Part
-void searchMedicine() {}
-void updateMedicine() {}
-void deleteMedicine() {}
+void addMedicine() {
+    if (medicineCount == MAX_MEDICINES) {
+        printf("Error: Inventory limit reached.\n");
+        return;
+    }
 
-//Azaz's Part
-void addToCart() {}
-void checkoutCart() {}
-void saveData() {}
-void loadData() {}
+    struct Medicine newMed;
+    getchar();
+    printf("Enter Medicine Name: ");
+    gets(newMed.name);
+    printf("Enter Price: ");
+    scanf("%f", &newMed.price);
+    printf("Enter Quantity: ");
+    scanf("%d", &newMed.quantity);
+    printf("Enter Shelf Number (1-10): ");
+    scanf("%d", &newMed.shelfNumber);
+    getchar(); // To consume newline
+    printf("Enter Location (top/middle/bottom): ");
+    gets(newMed.location);
 
-//Mahadi's Part
+    inventory[medicineCount++] = newMed;
+    printf("Medicine added successfully.\n");
+    choice();
+}
+
+void displayMedicines() {
+    if (medicineCount == 0) {
+        printf("No medicines to display.\n");
+        return;
+    }
+    printf("%-20s%-10s%-10s%-10s%-10s\n", "Name", "Price", "Quantity", "Shelf", "Location");
+    for (int i = 0; i < medicineCount; i++) {
+        printf("%-20s%-10.2f%-10d%-10d%-10s\n", inventory[i].name, inventory[i].price, inventory[i].quantity, inventory[i].shelfNumber, inventory[i].location);
+    }
+    choice();
+}
+
+void searchMedicine() {
+    char searchName[50];
+    int found = 0;
+    getchar();
+    printf("Enter Medicine Name to search: ");
+    gets(searchName);
+    for (int i = 0; i < medicineCount; i++) {
+        if (strcmp(inventory[i].name, searchName) == 0) {
+            printf("Medicine Found: %s | Price: %.2f | Quantity: %d\n", inventory[i].name, inventory[i].price, inventory[i].quantity);
+            found = 1;
+            break;
+        }
+    }
+    if (!found) {
+        printf("Medicine not found.\n");
+    }
+    choice();
+}
+
+void updateMedicine() {
+    char searchName[50];
+    int found = 0;
+    getchar();
+    printf("Enter Medicine Name to update: ");
+    gets(searchName);
+    for (int i = 0; i < medicineCount; i++) {
+        if (strcmp(inventory[i].name, searchName) == 0) {
+            printf("Enter new price: ");
+            scanf("%f", &inventory[i].price);
+            printf("Enter new quantity: ");
+            scanf("%d", &inventory[i].quantity);
+            printf("Enter new Shelf Number (1-10): ");
+            scanf("%d", &inventory[i].shelfNumber);
+            getchar(); // To consume newline
+            printf("Enter new Location (top/middle/bottom): ");
+            gets(inventory[i].location);
+            printf("Medicine updated successfully.\n");
+            found = 1;
+            break;
+        }
+    }
+    if (!found) {
+        printf("Medicine not found.\n");
+    }
+    choice();
+}
+
+void deleteMedicine() {
+    char searchName[50];
+    int found = 0;
+    getchar();
+    printf("Enter Medicine Name to delete: ");
+    gets(searchName);
+    for (int i = 0; i < medicineCount; i++) {
+        if (strcmp(inventory[i].name, searchName) == 0) {
+            for (int j = i; j < medicineCount - 1; j++) {
+                inventory[j] = inventory[j + 1];
+            }
+            medicineCount--;
+            printf("Medicine deleted successfully.\n");
+            found = 1;
+            break;
+        }
+    }
+    if (!found) {
+        printf("Medicine not found.\n");
+    }
+    choice();
+}
+
+void saveData() {
+    FILE *file = fopen("medicine_data.txt", "w");
+    if (file == NULL) {
+        printf("Error opening file.\n");
+        return;
+    }
+    for (int i = 0; i < medicineCount; i++) {
+        fprintf(file, "%s,%.2f,%d,%d,%s\n", inventory[i].name, inventory[i].price, inventory[i].quantity, inventory[i].shelfNumber, inventory[i].location);
+    }
+    fclose(file);
+    printf("Data saved to file successfully.\n");
+    choice();
+}
+
+void loadData() {
+    FILE *file = fopen("medicine_data.txt", "r");
+    if (file == NULL) {
+        printf("Error opening file or file doesn't exist.\n");
+        return;
+    }
+    medicineCount = 0;
+    while (fscanf(file, "%[^,],%f,%d,%d,%[^\n]\n", inventory[medicineCount].name, &inventory[medicineCount].price, &inventory[medicineCount].quantity, &inventory[medicineCount].shelfNumber, inventory[medicineCount].location) != EOF) {
+        medicineCount++;
+    }
+    fclose(file);
+    printf("Data loaded from file successfully.\n");
+    choice();
+}
+
 void registerUser() {
-    if (userCount == max_users) {
+    if (userCount == MAX_USERS) {
         printf("User limit reached.\n");
         return;
     }
@@ -79,8 +210,94 @@ int loginUser() {
     return -1; // Login failed
 }
 
-void adminMenu() {}
-void userMenu() {}
+void addToCart() {
+    char medicineName[50];
+    int quantity;
+    getchar();
+    printf("Enter Medicine Name to add to cart: ");
+    gets(medicineName);
+    printf("Enter Quantity: ");
+    scanf("%d", &quantity);
+    
+    for (int i = 0; i < medicineCount; i++) {
+        if (strcmp(inventory[i].name, medicineName) == 0) {
+            if (inventory[i].quantity >= quantity) {
+                inventory[i].quantity -= quantity;
+                printf("Added %d of %s to cart. Remaining quantity: %d\n", quantity, medicineName, inventory[i].quantity);
+            } else {
+                printf("Insufficient quantity in stock.\n");
+            }
+            return;
+        }
+    }
+    printf("Medicine not found.\n");
+}
+
+void checkoutCart() {
+    // In this simple implementation, checkout just confirms the cart operation.
+    printf("Checkout complete. Thank you for your purchase.\n");
+    choice();
+}
+
+void adminMenu() {
+    int option;
+    while (1) {
+        printf("\n=== Admin Menu ===\n");
+        printf("1. Add Medicine\n");
+        printf("2. Display Medicines\n");
+        printf("3. Search Medicine\n");
+        printf("4. Update Medicine\n");
+        printf("5. Delete Medicine\n");
+        printf("6. Save Data\n");
+        printf("7. Load Data\n");
+        printf("0. Logout\n");
+        printf("Choose an option: ");
+        scanf("%d", &option);
+
+        if (option == 0) {
+            loggedInUserIndex = -1; // Logout
+            break;
+        }
+
+        switch (option) {
+            case 1: addMedicine(); break;
+            case 2: displayMedicines(); break;
+            case 3: searchMedicine(); break;
+            case 4: updateMedicine(); break;
+            case 5: deleteMedicine(); break;
+            case 6: saveData(); break;
+            case 7: loadData(); break;
+            default: printf("Invalid choice. Please try again.\n");
+        }
+    }
+}
+
+void userMenu() {
+    int option;
+    while (1) {
+        printf("\n=== User Menu ===\n");
+        printf("1. Display Medicines\n");
+        printf("2. Search Medicine\n");
+        printf("3. Add to Cart\n");
+        printf("4. Checkout\n");
+        printf("0. Logout\n");
+        printf("Choose an option: ");
+        scanf("%d", &option);
+
+        if (option == 0) {
+            loggedInUserIndex = -1; // Logout
+            break;
+        }
+
+        switch (option) {
+            case 1: displayMedicines(); break;
+            case 2: searchMedicine(); break;
+            case 3: addToCart(); break;
+            case 4: checkoutCart(); break;
+            default: printf("Invalid choice. Please try again.\n");
+        }
+    }
+}
 
 int main() {
     int option;
