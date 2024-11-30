@@ -228,6 +228,33 @@ void loadData() {
     choice();
 }
 
+void saveUsers() {
+    FILE *file = fopen("users.txt", "w");
+    if (file == NULL) {
+        printf("Error opening file for saving.\n");
+        return;
+    }
+    for (int i = 0; i < userCount; i++) {
+        fprintf(file, "%s,%s,%d\n", users[i].username, users[i].password, users[i].isAdmin);
+    }
+    fclose(file);
+    printf("User data saved to file successfully.\n");
+}
+
+void loadUsers() {
+    FILE *file = fopen("users.txt", "r");
+    if (file == NULL) {
+        printf("Error opening file or file doesn't exist. Starting fresh.\n");
+        return;
+    }
+    userCount = 0;
+    while (fscanf(file, "%[^,],%[^,],%d\n", users[userCount].username, users[userCount].password, &users[userCount].isAdmin) != EOF) {
+        userCount++;
+    }
+    fclose(file);
+    printf("User data loaded from file successfully. Total users: %d\n", userCount);
+}
+
 void registerUser() {
     if (userCount == MAX_USERS) {
         printf("User limit reached.\n");
@@ -351,6 +378,8 @@ int main() {
         printf("\n=== Medical Store Management System ===\n");
         printf("1. Register\n");
         printf("2. Login\n");
+        printf("3. Save Users\n");
+        printf("4. Load Users\n");
         printf("0. Exit\n");
         printf("Choose an option: ");
         scanf("%d", &option);
@@ -368,6 +397,12 @@ int main() {
                         userMenu();
                     }
                 }
+                break;
+            case 3:
+                saveUsers();
+                break;
+            case 4:
+                loadUsers();
                 break;
             case 0:
                 printf("Thank you for using the system.\n");
