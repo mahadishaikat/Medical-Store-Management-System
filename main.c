@@ -5,6 +5,7 @@
 #define MAX_MEDICINES 100
 #define MAX_USERS 10
 #define LOCATION_LENGTH 10
+#define MAX_CART_ITEMS 50
 
 struct Medicine {
     char name[50];
@@ -14,6 +15,11 @@ struct Medicine {
     char location[LOCATION_LENGTH];
 };
 
+struct CartItem {
+    char name[50];
+    int quantity;
+};
+
 struct User {
     char username[50];
     char password[50];
@@ -21,8 +27,10 @@ struct User {
 };
 
 struct Medicine inventory[MAX_MEDICINES];
+struct CartItem cart[MAX_CART_ITEMS];
 struct User users[MAX_USERS];
 int medicineCount = 0;
+int cartItemCount = 0;
 int userCount = 0;
 int loggedInUserIndex = -1;
 
@@ -153,14 +161,16 @@ void addToCart() {
     gets(medicineName);
     printf("Enter Quantity: ");
     scanf("%d", &quantity);
-    
+
     for (int i = 0; i < medicineCount; i++) {
         if (strcmp(inventory[i].name, medicineName) == 0) {
             if (inventory[i].quantity >= quantity) {
-                inventory[i].quantity -= quantity;
-                printf("Added %d of %s to cart. Remaining quantity: %d\n", quantity, medicineName, inventory[i].quantity);
+                strcpy(cart[cartItemCount].name, medicineName);
+                cart[cartItemCount].quantity = quantity;
+                cartItemCount++;
+                printf("%d of %s added to cart.\n", quantity, medicineName);
             } else {
-                printf("Insufficient quantity in stock.\n");
+                printf("Insufficient stock for %s.\n", medicineName);
             }
             return;
         }
@@ -169,6 +179,22 @@ void addToCart() {
 }
 
 void checkoutCart() {
+    if (cartItemCount == 0) {
+        printf("Cart is empty. Add items to the cart first.\n");
+        return;
+    }
+
+    printf("\n=== Checkout Summary ===\n");
+    for (int i = 0; i < cartItemCount; i++) {
+        for (int j = 0; j < medicineCount; j++) {
+            if (strcmp(cart[i].name, inventory[j].name) == 0) {
+                inventory[j].quantity -= cart[i].quantity;
+                printf("Medicine: %s | Quantity: %d\n", cart[i].name, cart[i].quantity);
+                break;
+            }
+        }
+    }
+    cartItemCount = 0;
     printf("Checkout complete. Thank you for your purchase.\n");
     choice();
 }
@@ -254,7 +280,7 @@ void adminMenu() {
         scanf("%d", &option);
 
         if (option == 0) {
-            loggedInUserIndex = -1; // Logout
+            loggedInUserIndex = -1;
             break;
         }
 
