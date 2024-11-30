@@ -108,7 +108,7 @@ void updateMedicine() {
             scanf("%d", &inventory[i].quantity);
             printf("Enter new Shelf Number (1-10): ");
             scanf("%d", &inventory[i].shelfNumber);
-            getchar(); // To consume newline
+            getchar();
             printf("Enter new Location (top/middle/bottom): ");
             gets(inventory[i].location);
             printf("Medicine updated successfully.\n");
