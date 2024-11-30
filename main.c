@@ -233,14 +233,35 @@ void registerUser() {
         printf("User limit reached.\n");
         return;
     }
+
     struct User newUser;
     getchar();
     printf("Enter Username: ");
     gets(newUser.username);
     printf("Enter Password: ");
     gets(newUser.password);
+
+    int isAdminChoice;
     printf("Are you an admin? (1 for yes, 0 for no): ");
-    scanf("%d", &newUser.isAdmin);
+    scanf("%d", &isAdminChoice);
+
+    if (isAdminChoice == 1) {
+        char masterKey[20];
+        getchar();
+        printf("Enter Master Key: ");
+        gets(masterKey);
+
+        if (strcmp(masterKey, "admin1040") == 0) {
+            newUser.isAdmin = 1;
+            printf("Admin access granted.\n");
+        } else {
+            newUser.isAdmin = 0;
+            printf("Invalid Master Key. Registered as a regular user.\n");
+        }
+    } else {
+        newUser.isAdmin = 0;
+    }
+
     users[userCount++] = newUser;
     printf("User registered successfully.\n");
     choice();
