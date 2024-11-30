@@ -11,13 +11,13 @@ struct Medicine {
     float price;
     int quantity;
     int shelfNumber;
-    char location[LOCATION_LENGTH]; // "top", "middle", or "bottom"
+    char location[LOCATION_LENGTH];
 };
 
 struct User {
     char username[50];
     char password[50];
-    int isAdmin; // 1 for admin, 0 for regular user
+    int isAdmin;
 };
 
 struct Medicine inventory[MAX_MEDICINES];
@@ -54,7 +54,7 @@ void addMedicine() {
     scanf("%d", &newMed.quantity);
     printf("Enter Shelf Number (1-10): ");
     scanf("%d", &newMed.shelfNumber);
-    getchar(); // To consume newline
+    getchar();
     printf("Enter Location (top/middle/bottom): ");
     gets(newMed.location);
 
@@ -145,6 +145,34 @@ void deleteMedicine() {
     choice();
 }
 
+void addToCart() {
+    char medicineName[50];
+    int quantity;
+    getchar();
+    printf("Enter Medicine Name to add to cart: ");
+    gets(medicineName);
+    printf("Enter Quantity: ");
+    scanf("%d", &quantity);
+    
+    for (int i = 0; i < medicineCount; i++) {
+        if (strcmp(inventory[i].name, medicineName) == 0) {
+            if (inventory[i].quantity >= quantity) {
+                inventory[i].quantity -= quantity;
+                printf("Added %d of %s to cart. Remaining quantity: %d\n", quantity, medicineName, inventory[i].quantity);
+            } else {
+                printf("Insufficient quantity in stock.\n");
+            }
+            return;
+        }
+    }
+    printf("Medicine not found.\n");
+}
+
+void checkoutCart() {
+    printf("Checkout complete. Thank you for your purchase.\n");
+    choice();
+}
+
 void saveData() {
     FILE *file = fopen("medicine_data.txt", "w");
     if (file == NULL) {
@@ -203,40 +231,11 @@ int loginUser() {
         if (strcmp(users[i].username, username) == 0 && strcmp(users[i].password, password) == 0) {
             loggedInUserIndex = i;
             printf("Login successful! Welcome %s.\n", username);
-            return users[i].isAdmin; // Return 1 for admin, 0 for regular user
+            return users[i].isAdmin;
         }
     }
     printf("Invalid username or password.\n");
-    return -1; // Login failed
-}
-
-void addToCart() {
-    char medicineName[50];
-    int quantity;
-    getchar();
-    printf("Enter Medicine Name to add to cart: ");
-    gets(medicineName);
-    printf("Enter Quantity: ");
-    scanf("%d", &quantity);
-    
-    for (int i = 0; i < medicineCount; i++) {
-        if (strcmp(inventory[i].name, medicineName) == 0) {
-            if (inventory[i].quantity >= quantity) {
-                inventory[i].quantity -= quantity;
-                printf("Added %d of %s to cart. Remaining quantity: %d\n", quantity, medicineName, inventory[i].quantity);
-            } else {
-                printf("Insufficient quantity in stock.\n");
-            }
-            return;
-        }
-    }
-    printf("Medicine not found.\n");
-}
-
-void checkoutCart() {
-    // In this simple implementation, checkout just confirms the cart operation.
-    printf("Checkout complete. Thank you for your purchase.\n");
-    choice();
+    return -1;
 }
 
 void adminMenu() {
@@ -285,7 +284,7 @@ void userMenu() {
         scanf("%d", &option);
 
         if (option == 0) {
-            loggedInUserIndex = -1; // Logout
+            loggedInUserIndex = -1;
             break;
         }
 
