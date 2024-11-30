@@ -1,1 +1,8 @@
-
+seclo,59.00,100,1,top
+xyril,40.00,20,1,middle
+napa,75.00,100,1,top
+monas,24.00,20,1,bottom
+cvit,80.00,100,1,top
+napa extra,60.00,20,1,middle
+eno,15.00,100,1,top
+omiprazole,75.00,20,1,bottom
