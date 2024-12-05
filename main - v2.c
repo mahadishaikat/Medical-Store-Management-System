@@ -35,13 +35,13 @@ int userCount = 0;
 int loggedInUserIndex = -1;
 
 void choice() {
-    printf("Press y to return to menu or n to exit: ");
+    printf("\033[1;33mPress y to return to menu or n to exit: \033[0m");
     char c;
     scanf(" %c", &c);
     if (c == 'y') {
         system("cls");
     } else if (c == 'n') {
-        printf("Thank you for using the system.\n");
+        printf("\033[1;36mThank you for using the system.\033[0m\n");
         exit(0);
     }
 }
@@ -76,7 +76,7 @@ void displayMedicines() {
         printf("No medicines to display.\n");
         return;
     }
-    printf("%-20s%-10s%-10s%-10s%-10s\n", "Name", "Price", "Quantity", "Shelf", "Location");
+    printf("\033[1;36m%-20s%-10s%-10s%-10s%-10s\n", "Name", "Price", "Quantity", "Shelf", "Location\033[0m");
     for (int i = 0; i < medicineCount; i++) {
         printf("%-20s%-10.2f%-10d%-10d%-10s\n", inventory[i].name, inventory[i].price, inventory[i].quantity, inventory[i].shelfNumber, inventory[i].location);
     }
@@ -91,7 +91,7 @@ void searchMedicine() {
     gets(searchName);
     for (int i = 0; i < medicineCount; i++) {
         if (strcmp(inventory[i].name, searchName) == 0) {
-            printf("Medicine Found: %s | Price: %.2f | Quantity: %d\n", inventory[i].name, inventory[i].price, inventory[i].quantity);
+            printf("\033[1;32mMedicine Found: %s | Price: %.2f | Quantity: %d\033[0m\n", inventory[i].name, inventory[i].price, inventory[i].quantity);
             found = 1;
             break;
         }
@@ -195,7 +195,7 @@ void checkoutCart() {
         }
     }
     cartItemCount = 0;
-    printf("Checkout complete. Thank you for your purchase.\n");
+    printf("\033[1;32mCheckout complete. Thank you for your purchase.\033[0m\n");
     choice();
 }
 
@@ -252,7 +252,7 @@ void loadUsers() {
         userCount++;
     }
     fclose(file);
-    printf("User data loaded from file successfully. Total users: %d\n", userCount);
+    printf("\033[1;32mUser data loaded from file successfully. Total users: %d\033[0m\n", userCount);
 }
 
 void registerUser() {
