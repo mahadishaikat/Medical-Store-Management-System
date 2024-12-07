@@ -47,6 +47,7 @@ void choice() {
 }
 
 void addMedicine() {
+    system("cls");
     if (medicineCount == MAX_MEDICINES) {
         printf("Error: Inventory limit reached.\n");
         return;
@@ -72,6 +73,7 @@ void addMedicine() {
 }
 
 void displayMedicines() {
+    system("cls");
     if (medicineCount == 0) {
         printf("No medicines to display.\n");
         return;
@@ -80,10 +82,12 @@ void displayMedicines() {
     for (int i = 0; i < medicineCount; i++) {
         printf("%-20s%-10.2f%-10d%-10d%-10s\n", inventory[i].name, inventory[i].price, inventory[i].quantity, inventory[i].shelfNumber, inventory[i].location);
     }
+    printf("\n");
     choice();
 }
 
 void searchMedicine() {
+    system("cls");
     char searchName[50];
     int found = 0;
     getchar();
@@ -103,6 +107,7 @@ void searchMedicine() {
 }
 
 void updateMedicine() {
+    system("cls");
     char searchName[50];
     int found = 0;
     getchar();
@@ -131,6 +136,7 @@ void updateMedicine() {
 }
 
 void deleteMedicine() {
+    system("cls");
     char searchName[50];
     int found = 0;
     getchar();
@@ -154,12 +160,13 @@ void deleteMedicine() {
 }
 
 void addToCart() {
+    system("cls");
     char medicineName[50];
     int quantity;
     getchar();
-    printf("Enter Medicine Name to add to cart: ");
+    printf("\033[1;33mEnter Medicine Name to add to cart: \033[0m");
     gets(medicineName);
-    printf("Enter Quantity: ");
+    printf("\033[1;32mEnter Quantity: \033[0m");
     scanf("%d", &quantity);
 
     for (int i = 0; i < medicineCount; i++) {
@@ -168,23 +175,35 @@ void addToCart() {
                 strcpy(cart[cartItemCount].name, medicineName);
                 cart[cartItemCount].quantity = quantity;
                 cartItemCount++;
-                printf("%d of %s added to cart.\n", quantity, medicineName);
+                system("cls");
+                printf("\033[1;36m%d of %s added to cart.\033[0m\n", quantity, medicineName);
+                choice();
             } else {
-                printf("Insufficient stock for %s.\n", medicineName);
+                system("cls");
+                printf("\033[1;31mInsufficient stock for %s.\033[0m\n", medicineName);
+                choice();
             }
+
             return;
+
         }
     }
     printf("Medicine not found.\n");
+    system("cls");
 }
 
+
 void checkoutCart() {
+    system("cls");
     if (cartItemCount == 0) {
+        system("cls");
         printf("Cart is empty. Add items to the cart first.\n");
         return;
     }
 
-    printf("\n=== Checkout Summary ===\n");
+    printf("\033[1;32m+----------------------------------+\n");
+    printf("|  [ $ ]  Checkout Summary  [ $ ]  |\n");
+    printf("+----------------------------------+\033[0m\n\n");
     for (int i = 0; i < cartItemCount; i++) {
         for (int j = 0; j < medicineCount; j++) {
             if (strcmp(cart[i].name, inventory[j].name) == 0) {
@@ -224,7 +243,10 @@ void loadData() {
         medicineCount++;
     }
     fclose(file);
-    printf("Data loaded from file successfully.\n");
+    printf("\033[1;32m  Medicines Loaded successfully.\033[0m\n");
+}
+void loadDataUser() {
+    loadData();
     choice();
 }
 
@@ -238,7 +260,7 @@ void saveUsers() {
         fprintf(file, "%s,%s,%d\n", users[i].username, users[i].password, users[i].isAdmin);
     }
     fclose(file);
-    printf("User data saved to file successfully.\n");
+    printf("\033[1;32m  User data saved to file successfully.\033[0m\n");
 }
 
 void loadUsers() {
@@ -252,83 +274,104 @@ void loadUsers() {
         userCount++;
     }
     fclose(file);
-    printf("\033[1;32mUser data loaded from file successfully. Total users: %d\033[0m\n", userCount);
+    printf("\033[1;32m  Registered Users: %d\033[0m\n", userCount);
 }
 
 void registerUser() {
     if (userCount == MAX_USERS) {
-        printf("User limit reached.\n");
+        system("cls");
+        printf("\033[1;31m  User limit reached!\033[0m\n\n");
         return;
     }
-
+    system("cls");
     struct User newUser;
     getchar();
-    printf("Enter Username: ");
+    printf("\033[1;36m  Enter Username: \033[1;33m");
     gets(newUser.username);
-    printf("Enter Password: ");
+    printf("\033[1;36m  Enter Password: \033[1;33m");
     gets(newUser.password);
 
     int isAdminChoice;
-    printf("\033[1;33mAre you an admin? (1 for yes, 0 for no): \033[0m");
+    printf("\033[1;31m  Are you an admin? \033[1;32m(1 for yes, 0 for no): \033[1;33m");
     scanf("%d", &isAdminChoice);
 
     if (isAdminChoice == 1) {
         char masterKey[20];
         getchar();
-        printf("\033[1;35mEnter Master Key: \033[0m");
+        printf("\033[1;35m  Enter Master Key: \033[0m");
         gets(masterKey);
-
+        system("cls");
         if (strcmp(masterKey, "admin1040") == 0) {
             newUser.isAdmin = 1;
-            printf("\033[1;32mAdmin access granted.\033[0m\n");
+            printf("\033[1;32m  Admin access granted.\033[0m\n");
         } else {
             newUser.isAdmin = 0;
-            printf("\033[1;31mInvalid Master Key. Registered as a regular user.\033[0m\n");
+            printf("\033[1;31m  Invalid Master Key. Registered as a regular user.\033[0m\n");
         }
     } else {
         newUser.isAdmin = 0;
     }
 
     users[userCount++] = newUser;
-    printf("\033[1;33mUser registered successfully.\033[0m\n");
+    printf("\033[1;33m  User registered successfully.\033[0m\n");
+    saveUsers();
     choice();
 }
 
 int loginUser() {
+    system("cls");
     char username[50], password[50];
     getchar();
-    printf("Enter Username: ");
+    printf("\033[1;36m  Enter Username: \033[1;33m");
     gets(username);
-    printf("Enter Password: ");
+    printf("\033[1;36m  Enter Password: \033[0m\033[1;33m");
     gets(password);
     for (int i = 0; i < userCount; i++) {
         if (strcmp(users[i].username, username) == 0 && strcmp(users[i].password, password) == 0) {
             loggedInUserIndex = i;
-            printf("\033[1;32mLogin successful! Welcome %s.\033[0m\n", username);
+
+            printf("\033[1;32m  Login successful! Welcome %s.\033[0m\n", username);
+            system("cls");
             return users[i].isAdmin;
         }
     }
-    printf("\033[1;31mInvalid username or password.\033[0m\n");
+    printf("\033[1;31m  Invalid username or password.\033[0m\n");
     return -1;
 }
 
 void adminMenu() {
+    system("cls");
     int option;
     while (1) {
-        printf("\n\033[1;33m=== Admin Menu ===\033[0m\n");
-        printf("1. Add Medicine\n");
-        printf("2. Display Medicines\n");
-        printf("3. Search Medicine\n");
-        printf("4. Update Medicine\n");
-        printf("5. Delete Medicine\n");
-        printf("6. Save Data\n");
-        printf("7. Load Data\n");
-        printf("0. Logout\n");
-        printf("\033[1;33mChoose an option: \033[0m");
+
+        printf("\n");
+        printf("\033[1;33m");
+        printf(".     |__________________________________\n");
+        printf("|-----|\033[1;36m- - -|''''|''''|''''|''''|''''|'\033[1;31m##\033[0m\033[1;33m|__\n");
+        printf("|- -  |\033[0m    \033[1;32mMedical Store Management\033[0m    \033[1;31m###\033[0m\033[1;33m__]==\033[0m----------------------\033[1;33m\n");
+        printf("\033[1;33m|-----|________________________________\033[0m\033[1;31m##\033[0m\033[1;33m|\n");
+        printf("'     |");
+        printf("\033[0m\n\n");
+
+        printf("       \033[48;5;227m\033[30m");
+        printf("  Admin Menu  ");
+        printf("\033[0m\n");
+        printf("  ------------------------ \n");
+        printf(" |  1. Add Medicine       |\n");
+        printf(" |  2. Display Medicines  |\n");
+        printf(" |  3. Search Medicine    |\n");
+        printf(" |  4. Update Medicine    |\n");
+        printf(" |  5. Delete Medicine    |\n");
+        printf(" |  6. Save Data          |\n");
+        printf(" |  7. Load Data          |\n");
+        printf(" |  0. Logout             |\n");
+        printf("  ------------------------ \n");
+        printf("\033[1;33m  Choose an option: \033[0m");
         scanf("%d", &option);
 
         if (option == 0) {
             loggedInUserIndex = -1;
+            system("cls");
             break;
         }
 
@@ -346,19 +389,36 @@ void adminMenu() {
 }
 
 void userMenu() {
+    system("cls");
     int option;
     while (1) {
-        printf("\n\033[1;33m=== User Menu ===\033[0m\n");
-        printf("1. Display Medicines\n");
-        printf("2. Search Medicine\n");
-        printf("3. Add to Cart\n");
-        printf("4. Checkout\n");
-        printf("0. Logout\n");
-        printf("\033[1;33mChoose an option: \033[0m");
+
+        printf("\n");
+        printf("\033[1;33m");
+        printf(".     |__________________________________\n");
+        printf("|-----|\033[1;36m- - -|''''|''''|''''|''''|''''|'\033[1;31m##\033[0m\033[1;33m|__\n");
+        printf("|- -  |\033[0m    \033[1;32mMedical Store Management\033[0m    \033[1;31m###\033[0m\033[1;33m__]==\033[0m----------------------\033[1;33m\n");
+        printf("\033[1;33m|-----|________________________________\033[0m\033[1;31m##\033[0m\033[1;33m|\n");
+        printf("'     |");
+        printf("\033[0m\n\n");
+
+        printf("       \033[48;5;227m\033[30m");
+        printf("  User Menu  ");
+        printf("\033[0m\n");
+
+        printf("  ------------------------ \n");
+        printf(" |  1. Display Medicine   |\n");
+        printf(" |  2. Search Medicine    |\n");
+        printf(" |  3. Add to Cart        |\n");
+        printf(" |  4. Checkout           |\n");
+        printf(" |  0. Logout             |\n");
+        printf("  ------------------------ \n");
+        printf(" \033[1;33mChoose an option: \033[0m");
         scanf("%d", &option);
 
         if (option == 0) {
             loggedInUserIndex = -1;
+            system("cls");
             break;
         }
 
@@ -372,16 +432,89 @@ void userMenu() {
     }
 }
 
+void help() {
+    system("cls");
+    printf("\033[1;33m+-----------------------------+\n");
+    printf("|  [ + ]  User Manual  [ + ]  |\n");
+    printf("+-----------------------------+\033[0m\n\n");
+
+    printf("Welcome to the Medical Store Management System!\n");
+    printf("This software is designed to help manage a medical store, including inventory, user management, and sales. Below is a guide to using the system:\n\n");
+
+    printf("\033[1;32mFor Users:\033[0m\n");
+    printf("\033[1;32m-----------------\033[0m\n");
+    printf(" 1. Register/Login:\n");
+    printf("    - New users can register with a username and password.\n");
+    printf("    - Existing users can log in using their credentials.\n");
+    printf("    - Admin users require a master key for admin access.\n");
+    printf("\n");
+    printf(" 2. Add to Cart:\n");
+    printf("    - Search for medicines and add them to your cart by specifying the quantity.\n");
+    printf("\n");
+    printf(" 3. Checkout:\n");
+    printf("    - Review your cart and proceed to checkout. The inventory will update automatically.\n");
+    printf("\n");
+
+    printf("\033[1;32mFor Admins:\033[0m\n");
+    printf("\033[1;32m-----------------\033[0m\n");
+    printf(" 1. Add Medicine:\n");
+    printf("    - Add new medicines to the inventory by providing details such as name, price, quantity, shelf number, and location.\n");
+    printf("\n");
+    printf(" 2. Display Medicines:\n");
+    printf("    - View all medicines in the inventory with their details.\n");
+    printf("\n");
+    printf(" 3. Search Medicine:\n");
+    printf("    - Search for a specific medicine by name to view its details.\n");
+    printf("\n");
+    printf(" 4. Update Medicine:\n");
+    printf("    - Modify details of an existing medicine, including price, quantity, shelf number, and location.\n");
+    printf("\n");
+    printf(" 5. Delete Medicine:\n");
+    printf("    - Remove a medicine from the inventory by its name.\n");
+    printf("\n");
+    printf(" 6. Save Data:\n");
+    printf("    - Save the current inventory data to a file for future use.\n");
+    printf("\n");
+    printf(" 7. Load Data:\n");
+    printf("    - Load previously saved inventory data from a file.\n");
+    printf("\n");
+
+    printf("\033[1;33mAdditional Features:\033[0m\n");
+    printf("\033[1;33m-----------------\033[0m\n");
+    printf(" - Use the \033[1;36mchoice\033[0m prompt to navigate back to the main menu or exit the software.\n");
+    printf(" - All operations provide clear success or error messages to guide you.\n");
+    printf(" - Admin privileges allow for full control over inventory management.\n\n");
+
+    printf("\033[1;32mTips:\033[0m\n");
+    printf("\033[1;32m-----------------\033[0m\n");
+    printf(" - Use meaningful medicine names to make searching easier.\n");
+    printf(" - Ensure data is saved after significant changes to avoid losing progress.\n\n");
+
+    printf("For further assistance, contact your system administrator.\n\n");
+    choice();
+}
+
 int main() {
+
     int option;
     while (1) {
-        printf("\n\033[1;33m=== Medical Store Management System ===\033[0m\n");
-        printf("1. Register\n");
-        printf("2. Login\n");
-        printf("3. Save Users\n");
-        printf("4. Load Users\n");
-        printf("0. Exit\n");
-        printf("\033[1;33mChoose an option: \033[0m");
+        system("cls");
+        printf("    \033[48;5;227m\033[30m");
+        printf("  Guest Menu  ");
+        printf("\033[0m\n");
+        printf("\033[1;33m  [Choose an Option] \033[0m\n");
+
+        printf("  --------------------- \n");
+        printf(" |  1. Register        |\n");
+        printf(" |  2. Login           |\n");
+        printf(" |  3. View Medicines  |\n");
+        printf(" |  4. Help            |\n");
+        printf(" |  0. Exit            |\n");
+        printf("  --------------------- \n");
+        loadUsers();
+        loadData();
+
+        printf("  \033[1;33mChoose an option: \033[0m");
         scanf("%d", &option);
 
         switch (option) {
@@ -399,11 +532,12 @@ int main() {
                 }
                 break;
             case 3:
-                saveUsers();
+                displayMedicines();
                 break;
             case 4:
-                loadUsers();
+                help();
                 break;
+
             case 0:
                 printf("Thank you for using the system.\n");
                 exit(0);
