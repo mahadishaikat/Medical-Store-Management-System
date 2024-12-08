@@ -509,13 +509,13 @@ int main() {
         printf("\033[0m\n");
         printf("\033[1;33m  [Choose an Option] \033[0m\n");
 
-        printf("  --------------------- \n");
+        printf("\033[1;36m  --------------------- \n");
         printf(" |  1. Register        |\n");
         printf(" |  2. Login           |\n");
         printf(" |  3. View Medicines  |\n");
         printf(" |  4. Help            |\n");
         printf(" |  0. Exit            |\n");
-        printf("  --------------------- \n");
+        printf("  --------------------- \033[0m\n");
         loadUsers();
         loadData();
 
