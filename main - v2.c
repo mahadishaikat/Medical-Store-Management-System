@@ -326,16 +326,21 @@ int loginUser() {
     gets(username);
     printf("\033[1;36m  Enter Password: \033[0m\033[1;33m");
     gets(password);
+
     for (int i = 0; i < userCount; i++) {
         if (strcmp(users[i].username, username) == 0 && strcmp(users[i].password, password) == 0) {
             loggedInUserIndex = i;
 
             printf("\033[1;32m  Login successful! Welcome %s.\033[0m\n", username);
-            system("cls");
+            printf("\n  Press Enter to continue...");
+            getchar();
             return users[i].isAdmin;
         }
     }
+
     printf("\033[1;31m  Invalid username or password.\033[0m\n");
+    printf("\n  Press Enter to try again...");
+    getchar();
     return -1;
 }
 
