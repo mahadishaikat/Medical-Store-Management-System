@@ -7,6 +7,7 @@
 #define MAX_USERS 10
 #define LOCATION_LENGTH 10
 #define MAX_CART_ITEMS 50
+#define MAX_REQUESTS 100
 
 struct Medicine {
     char name[50];
@@ -27,6 +28,11 @@ struct User {
     int isAdmin;
 };
 
+struct MedicineRequest {
+    char name[50];
+    int quantity;
+};
+
 struct Medicine inventory[MAX_MEDICINES];
 struct CartItem cart[MAX_CART_ITEMS];
 struct User users[MAX_USERS];
@@ -34,6 +40,9 @@ int medicineCount = 0;
 int cartItemCount = 0;
 int userCount = 0;
 int loggedInUserIndex = -1;
+
+struct MedicineRequest requestedMedicines[MAX_REQUESTS];
+int requestCount = 0;
 
 void choice() {
     printf("\033[1;33mPress y to return to menu or n to exit: \033[0m");
@@ -109,6 +118,59 @@ void checkLowStocks() {
     choice();
 }
 
+void requestMedicine() {
+    system("cls");
+    char medicineName[50];
+    int quantity;
+    int found = 0;
+    getchar();
+    printf("\033[1;33mEnter Medicine Name to request: \033[0m");
+    gets(medicineName);
+    printf("\033[1;32mEnter Quantity: \033[0m");
+    scanf("%d", &quantity);
+
+
+    for (int i = 0; i < medicineCount; i++) {
+        if (strcmp(inventory[i].name, medicineName) == 0) {
+            printf("\033[1;32mMedicine is available in inventory. No need to request.\033[0m\n");
+            found = 1;
+            break;
+        }
+    }
+
+
+    if (!found) {
+
+        if (requestCount < MAX_REQUESTS) {
+            strcpy(requestedMedicines[requestCount].name, medicineName);
+            requestedMedicines[requestCount].quantity = quantity;
+            requestCount++;
+            printf("\033[1;36mMedicine request for %s (Quantity: %d) has been submitted.\033[0m\n", medicineName, quantity);
+        } else {
+            printf("\033[1;31mSorry, request limit reached. Cannot process your request.\033[0m\n");
+        }
+    }
+    choice();
+}
+
+void displayRequestedMedicines() {
+    system("cls");
+    if (requestCount == 0) {
+        printf("\033[1;31mNo medicine requests found.\033[0m\n");
+        choice();
+        return;
+    }
+
+    printf("\033[1;32m+----------------------------------+\n");
+    printf("|  Medicine Request Summary       |\n");
+    printf("+----------------------------------+\033[0m\n\n");
+
+    for (int i = 0; i < requestCount; i++) {
+        printf("Requested Medicine: %s | Quantity: %d\n", requestedMedicines[i].name, requestedMedicines[i].quantity);
+    }
+
+    choice();
+}
 
 void searchMedicine() {
     system("cls");
@@ -435,15 +497,16 @@ void adminMenu() {
         printf("       \033[48;5;227m\033[30m");
         printf("  Admin Menu  ");
         printf("\033[0m\n");
-        printf("  ------------------------ \n");
-        printf(" |  1. Add Medicine       |\n");
-        printf(" |  2. Display Medicines  |\n");
-        printf(" |  3. Search Medicine    |\n");
-        printf(" |  4. Update Medicine    |\n");
-        printf(" |  5. Delete Medicine    |\n");
-        printf(" |  6. Check Low Stocks   |\n");
-        printf(" |  0. Logout             |\n");
-        printf("  ------------------------ \n");
+        printf("  --------------------------- \n");
+        printf(" |  1. Add Medicine          |\n");
+        printf(" |  2. Display Medicines     |\n");
+        printf(" |  3. Search Medicine       |\n");
+        printf(" |  4. Update Medicine       |\n");
+        printf(" |  5. Delete Medicine       |\n");
+        printf(" |  6. Check Low Stocks      |\n");
+        printf(" |  7. Requested Medicines   |\n");
+        printf(" |  0. Logout                |\n");
+        printf("  --------------------------- \n");
         printf("\033[1;33m  Choose an option: \033[0m");
         scanf("%d", &option);
         loadData();
@@ -460,6 +523,7 @@ void adminMenu() {
             case 4: updateMedicine(); break;
             case 5: deleteMedicine(); break;
             case 6: checkLowStocks(); break;
+            case 7: displayRequestedMedicines(); break;
             default: printf("Invalid choice. Please try again.\n");
         }
     }
@@ -488,6 +552,7 @@ void userMenu() {
         printf(" |  2. Search Medicine    |\n");
         printf(" |  3. Add to Cart        |\n");
         printf(" |  4. Checkout           |\n");
+        printf(" |  5. Request Medicine   |\n");
         printf(" |  0. Logout             |\n");
         printf("  ------------------------ \n");
         printf(" \033[1;33mChoose an option: \033[0m");
@@ -504,6 +569,7 @@ void userMenu() {
             case 2: searchMedicine(); break;
             case 3: addToCart(); break;
             case 4: checkoutCart(); break;
+            case 5: requestMedicine(); break;
             default: printf("Invalid choice. Please try again.\n");
         }
     }
