@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <ctype.h>
 
 #define MAX_MEDICINES 100
 #define MAX_USERS 10
@@ -86,25 +87,73 @@ void displayMedicines() {
     choice();
 }
 
+void checkLowStocks() {
+    system("cls");
+    int lowStockFound = 0;
+
+    printf("\033[1;31m+----------------------------------+\n");
+    printf("| Medicines with Low Stock (<20)  |\n");
+    printf("+----------------------------------+\033[0m\n\n");
+
+    for (int i = 0; i < medicineCount; i++) {
+        if (inventory[i].quantity < 20) {
+            printf("Medicine: %s | Quantity: %d | Price: %.2f\n",
+                   inventory[i].name, inventory[i].quantity, inventory[i].price);
+            lowStockFound = 1;
+        }
+    }
+
+    if (!lowStockFound) {
+        printf("No medicines with low stock found.\n");
+    }
+    choice();
+}
+
+
 void searchMedicine() {
     system("cls");
+
+    printf("\033[1;36m%-20s%-10s%-10s%-10s%-10s\n", "Name", "Price", "Quantity", "Shelf", "Location\033[0m");
+    for (int i = 0; i < medicineCount; i++) {
+        printf("%-20s%-10.2f%-10d%-10d%-10s\n", inventory[i].name, inventory[i].price, inventory[i].quantity, inventory[i].shelfNumber, inventory[i].location);
+    }
+    printf("\n");
+
     char searchName[50];
     int found = 0;
     getchar();
     printf("Enter Medicine Name to search: ");
     gets(searchName);
+
+
+    for (int i = 0; searchName[i]; i++) {
+        searchName[i] = tolower(searchName[i]);
+    }
+
     for (int i = 0; i < medicineCount; i++) {
-        if (strcmp(inventory[i].name, searchName) == 0) {
-            printf("\033[1;32mMedicine Found: %s | Price: %.2f | Quantity: %d\033[0m\n", inventory[i].name, inventory[i].price, inventory[i].quantity);
+        char inventoryName[50];
+        strcpy(inventoryName, inventory[i].name);
+
+
+        for (int j = 0; inventoryName[j]; j++) {
+            inventoryName[j] = tolower(inventoryName[j]);
+        }
+
+
+        if (strcmp(inventoryName, searchName) == 0) {
+            printf("\033[1;32mMedicine Found: %s | Price: %.2f | Quantity: %d\033[0m\n",
+                   inventory[i].name, inventory[i].price, inventory[i].quantity);
             found = 1;
             break;
         }
     }
+
     if (!found) {
         printf("Medicine not found.\n");
     }
     choice();
 }
+
 
 void updateMedicine() {
     system("cls");
@@ -161,6 +210,11 @@ void deleteMedicine() {
 
 void addToCart() {
     system("cls");
+    printf("\033[1;36m%-20s%-10s%-10s%-10s%-10s\n", "Name", "Price", "Quantity", "Shelf", "Location\033[0m");
+    for (int i = 0; i < medicineCount; i++) {
+        printf("%-20s%-10.2f%-10d%-10d%-10s\n", inventory[i].name, inventory[i].price, inventory[i].quantity, inventory[i].shelfNumber, inventory[i].location);
+    }
+    printf("\n");
     char medicineName[50];
     int quantity;
     getchar();
@@ -169,25 +223,39 @@ void addToCart() {
     printf("\033[1;32mEnter Quantity: \033[0m");
     scanf("%d", &quantity);
 
+
+    for (int i = 0; medicineName[i]; i++) {
+        medicineName[i] = tolower(medicineName[i]);
+    }
+
     for (int i = 0; i < medicineCount; i++) {
-        if (strcmp(inventory[i].name, medicineName) == 0) {
+        char inventoryName[50];
+        strcpy(inventoryName, inventory[i].name);
+
+
+        for (int j = 0; inventoryName[j]; j++) {
+            inventoryName[j] = tolower(inventoryName[j]);
+        }
+
+
+        if (strcmp(inventoryName, medicineName) == 0) {
             if (inventory[i].quantity >= quantity) {
-                strcpy(cart[cartItemCount].name, medicineName);
+                strcpy(cart[cartItemCount].name, inventory[i].name);
                 cart[cartItemCount].quantity = quantity;
                 cartItemCount++;
                 system("cls");
-                printf("\033[1;36m%d of %s added to cart.\033[0m\n", quantity, medicineName);
+                printf("\033[1;36m%d of %s added to cart.\033[0m\n", quantity, inventory[i].name);
                 choice();
+                return;
             } else {
                 system("cls");
-                printf("\033[1;31mInsufficient stock for %s.\033[0m\n", medicineName);
+                printf("\033[1;31mInsufficient stock for %s.\033[0m\n", inventory[i].name);
                 choice();
+                return;
             }
-
-            return;
-
         }
     }
+
     printf("Medicine not found.\n");
     system("cls");
 }
@@ -200,21 +268,28 @@ void checkoutCart() {
         printf("Cart is empty. Add items to the cart first.\n");
         return;
     }
-
+    float grandTotal = 0.0;
     printf("\033[1;32m+----------------------------------+\n");
     printf("|  [ $ ]  Checkout Summary  [ $ ]  |\n");
     printf("+----------------------------------+\033[0m\n\n");
     for (int i = 0; i < cartItemCount; i++) {
         for (int j = 0; j < medicineCount; j++) {
             if (strcmp(cart[i].name, inventory[j].name) == 0) {
+                float totalCost = cart[i].quantity * inventory[j].price;
                 inventory[j].quantity -= cart[i].quantity;
-                printf("Medicine: %s | Quantity: %d\n", cart[i].name, cart[i].quantity);
+                grandTotal += totalCost;
+
+                printf("Medicine: %s | Quantity: %d | Unit Price: %.2f | Total Cost: %.2f\n",
+                       cart[i].name, cart[i].quantity, inventory[j].price, totalCost);
                 break;
             }
         }
     }
+
+    printf("\n\033[1;33mGrand Total: %.2f\033[0m\n", grandTotal);
     cartItemCount = 0;
     printf("\033[1;32mCheckout complete. Thank you for your purchase.\033[0m\n");
+    saveData();
     choice();
 }
 
@@ -229,7 +304,6 @@ void saveData() {
     }
     fclose(file);
     printf("Data saved to file successfully.\n");
-    choice();
 }
 
 void loadData() {
@@ -367,13 +441,12 @@ void adminMenu() {
         printf(" |  3. Search Medicine    |\n");
         printf(" |  4. Update Medicine    |\n");
         printf(" |  5. Delete Medicine    |\n");
-        printf(" |  6. Save Data          |\n");
-        printf(" |  7. Load Data          |\n");
+        printf(" |  6. Check Low Stocks   |\n");
         printf(" |  0. Logout             |\n");
         printf("  ------------------------ \n");
         printf("\033[1;33m  Choose an option: \033[0m");
         scanf("%d", &option);
-
+        loadData();
         if (option == 0) {
             loggedInUserIndex = -1;
             system("cls");
@@ -386,8 +459,7 @@ void adminMenu() {
             case 3: searchMedicine(); break;
             case 4: updateMedicine(); break;
             case 5: deleteMedicine(); break;
-            case 6: saveData(); break;
-            case 7: loadData(); break;
+            case 6: checkLowStocks(); break;
             default: printf("Invalid choice. Please try again.\n");
         }
     }
@@ -420,7 +492,7 @@ void userMenu() {
         printf("  ------------------------ \n");
         printf(" \033[1;33mChoose an option: \033[0m");
         scanf("%d", &option);
-
+        loadData();
         if (option == 0) {
             loggedInUserIndex = -1;
             system("cls");
