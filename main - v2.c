@@ -216,7 +216,6 @@ void searchMedicine() {
     choice();
 }
 
-
 void updateMedicine() {
     system("cls");
     char searchName[50];
@@ -224,27 +223,64 @@ void updateMedicine() {
     getchar();
     printf("Enter Medicine Name to update: ");
     gets(searchName);
+
     for (int i = 0; i < medicineCount; i++) {
         if (strcmp(inventory[i].name, searchName) == 0) {
-            printf("Enter new price: ");
-            scanf("%f", &inventory[i].price);
-            printf("Enter new quantity: ");
-            scanf("%d", &inventory[i].quantity);
-            printf("Enter new Shelf Number (1-10): ");
-            scanf("%d", &inventory[i].shelfNumber);
-            getchar();
-            printf("Enter new Location (top/middle/bottom): ");
-            gets(inventory[i].location);
-            printf("Medicine updated successfully.\n");
+            int choice;
             found = 1;
-            break;
+            while (1) {
+                printf("\nWhat do you want to update?\n");
+                printf("1. Price\n");
+                printf("2. Quantity\n");
+                printf("3. Shelf Number\n");
+                printf("4. Location\n");
+                printf("5. Exit Update\n");
+                printf("Enter your choice: ");
+                scanf("%d", &choice);
+                getchar(); // To consume the newline character
+
+                switch (choice) {
+                    case 1:
+                        printf("Enter new price: ");
+                        scanf("%f", &inventory[i].price);
+                        getchar();
+                        printf("Price updated successfully.\n");
+                        break;
+                    case 2:
+                        printf("Enter new quantity: ");
+                        scanf("%d", &inventory[i].quantity);
+                        getchar();
+                        printf("Quantity updated successfully.\n");
+                        break;
+                    case 3:
+                        printf("Enter new Shelf Number (1-10): ");
+                        scanf("%d", &inventory[i].shelfNumber);
+                        getchar();
+                        printf("Shelf Number updated successfully.\n");
+                        break;
+                    case 4:
+                        printf("Enter new Location (top/middle/bottom): ");
+                        gets(inventory[i].location);
+                        printf("Location updated successfully.\n");
+                        break;
+                    case 5:
+                        printf("Exiting update process.\n");
+                        return;
+                    default:
+                        printf("Invalid choice. Please try again.\n");
+                        break;
+                }
+            }
         }
     }
+
     if (!found) {
         printf("Medicine not found.\n");
     }
-    choice();
+
+    choice(); // Call the next action menu
 }
+
 
 void deleteMedicine() {
     system("cls");
@@ -487,10 +523,10 @@ void adminMenu() {
 
         printf("\n");
         printf("\033[1;33m");
-        printf(".     |__________________________________\n");
-        printf("|-----|\033[1;36m- - -|''''|''''|''''|''''|''''|'\033[1;31m##\033[0m\033[1;33m|__\n");
+        printf(".     |\n");
+        printf("|-----|\033[1;36m- - -|''''|''''|''''|''''|''''|'\033[1;31m##\033[0m\033[1;33m|\n");
         printf("|- -  |\033[0m    \033[1;32mMedical Store Management\033[0m    \033[1;31m###\033[0m\033[1;33m__]==\033[0m----------------------\033[1;33m\n");
-        printf("\033[1;33m|-----|________________________________\033[0m\033[1;31m##\033[0m\033[1;33m|\n");
+        printf("\033[1;33m|-----|\033[0m\033[1;31m##\033[0m\033[1;33m|\n");
         printf("'     |");
         printf("\033[0m\n\n");
 
@@ -536,10 +572,10 @@ void userMenu() {
 
         printf("\n");
         printf("\033[1;33m");
-        printf(".     |__________________________________\n");
-        printf("|-----|\033[1;36m- - -|''''|''''|''''|''''|''''|'\033[1;31m##\033[0m\033[1;33m|__\n");
+        printf(".     |\n");
+        printf("|-----|\033[1;36m- - -|''''|''''|''''|''''|''''|'\033[1;31m##\033[0m\033[1;33m|\n");
         printf("|- -  |\033[0m    \033[1;32mMedical Store Management\033[0m    \033[1;31m###\033[0m\033[1;33m__]==\033[0m----------------------\033[1;33m\n");
-        printf("\033[1;33m|-----|________________________________\033[0m\033[1;31m##\033[0m\033[1;33m|\n");
+        printf("\033[1;33m|-----|\033[0m\033[1;31m##\033[0m\033[1;33m|\n");
         printf("'     |");
         printf("\033[0m\n\n");
 
