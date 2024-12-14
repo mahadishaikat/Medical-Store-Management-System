@@ -216,33 +216,80 @@ void searchMedicine() {
     choice();
 }
 
-
 void updateMedicine() {
     system("cls");
+    printf("\033[1;36m%-20s%-10s%-10s%-10s%-10s\n", "Name", "Price", "Quantity", "Shelf", "Location\033[0m");
+    for (int i = 0; i < medicineCount; i++) {
+        printf("%-20s%-10.2f%-10d%-10d%-10s\n", inventory[i].name, inventory[i].price, inventory[i].quantity, inventory[i].shelfNumber, inventory[i].location);
+    }
+    printf("\n");
+
     char searchName[50];
     int found = 0;
     getchar();
     printf("Enter Medicine Name to update: ");
     gets(searchName);
+
     for (int i = 0; i < medicineCount; i++) {
         if (strcmp(inventory[i].name, searchName) == 0) {
-            printf("Enter new price: ");
-            scanf("%f", &inventory[i].price);
-            printf("Enter new quantity: ");
-            scanf("%d", &inventory[i].quantity);
-            printf("Enter new Shelf Number (1-10): ");
-            scanf("%d", &inventory[i].shelfNumber);
-            getchar();
-            printf("Enter new Location (top/middle/bottom): ");
-            gets(inventory[i].location);
-            printf("Medicine updated successfully.\n");
+            int choice;
             found = 1;
-            break;
+            while (1) {
+                printf("\nWhat do you want to update?\n");
+                printf("1. Price\n");
+                printf("2. Quantity\n");
+                printf("3. Shelf Number\n");
+                printf("4. Location\n");
+                printf("5. Exit Update\n");
+                printf("Enter your choice: ");
+                scanf("%d", &choice);
+                getchar();
+
+                switch (choice) {
+                    case 1:
+                        system("cls");
+                        printf("Enter new price: ");
+                        scanf("%f", &inventory[i].price);
+                        getchar();
+                        printf("Price updated successfully.\n");
+                        break;
+                    case 2:
+                        system("cls");
+                        printf("Enter new quantity: ");
+                        scanf("%d", &inventory[i].quantity);
+                        getchar();
+                        printf("Quantity updated successfully.\n");
+                        break;
+                    case 3:
+                        system("cls");
+                        printf("Enter new Shelf Number (1-10): ");
+                        scanf("%d", &inventory[i].shelfNumber);
+                        getchar();
+                        printf("Shelf Number updated successfully.\n");
+                        break;
+                    case 4:
+                        system("cls");
+                        printf("Enter new Location (top/middle/bottom): ");
+                        gets(inventory[i].location);
+                        printf("Location updated successfully.\n");
+                        break;
+                    case 5:
+                        printf("Exiting update process.\n");
+                        system("cls");
+                        return;
+                    default:
+                        system("cls");
+                        printf("Invalid choice. Please try again.\n");
+                        break;
+                }
+            }
         }
     }
+
     if (!found) {
         printf("Medicine not found.\n");
     }
+
     choice();
 }
 
